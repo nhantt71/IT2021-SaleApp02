@@ -30,7 +30,64 @@ def load_products(kw=None):
         "price": 24000000,
         "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
         "category_id": 1
-    }]
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }, {
+        "id": 3,
+        "name": "Galaxy Note 10 Plus",
+        "description": "Samsung, 64GB, RAML: 6GB",
+        "price": 24000000,
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248722/r8sjly3st7estapvj19u.jpg",
+        "category_id": 1
+    }
+    ]
 
     if kw:
         products = [p for p in products if p['name'].find(kw) >= 0]
