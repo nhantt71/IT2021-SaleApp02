@@ -14,7 +14,7 @@ def load_products(kw=None):
         "name": "iPhone 7 Plus",
         "description": "Apple, 32GB, RAM: 3GB, iOS13",
         "price": 17000000,
-        "image":"https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg",
+        "image": "https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg",
         "category_id": 1
     }, {
         "id": 2,
@@ -90,10 +90,6 @@ def load_products(kw=None):
     ]
 
     if kw:
-        products = [p for p in products if p['name'].find(kw) >= 0]
-
+        products = [p for p in products if p['name'].lower().find(str(kw).lower()) >= 0]
 
     return products
-
-
-
