@@ -9,7 +9,7 @@ admin = Admin(app, name="QUẢN LÝ BÁN HÀNG", template_mode="bootstrap4")
 
 class MyProductsView(ModelView):
     column_display_pk = True
-    column_list = ['name', 'price', 'category_id']
+    column_list = ['id', 'name', 'price', 'category']
     column_filters = ['price', 'name']
     column_searchable_list = ['name']
     can_view_details = True
@@ -19,12 +19,16 @@ class MyProductsView(ModelView):
     column_sortable_list = ['price']
 
 
+class MyCategoryView(ModelView):
+    column_list = ['name', 'products']
+
+
 class MyStatsView(BaseView):
     @expose('/')
     def __index__(self):
         return self.render('admin/stats.html')
 
 
-admin.add_view(ModelView(Category, db.session))
+admin.add_view(MyCategoryView(Category, db.session))
 admin.add_view(MyProductsView(Product, db.session))
 admin.add_view(MyStatsView(name="Thống kê báo cáo"))

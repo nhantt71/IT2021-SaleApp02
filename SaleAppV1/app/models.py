@@ -2,12 +2,27 @@ from sqlalchemy.orm import relationship
 from app import db
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
+
+
+class User(db.Model, UserMixin):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(50), nullable=False)
+    avatar = Column(String(100), default="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+
+    def __str__(self):
+        return self.name
 
 
 class Category(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=False, unique=True)
     products = relationship('Product', backref='category', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Product(db.Model):
@@ -22,6 +37,7 @@ if __name__ == '__main__':
     from app import app
 
     with app.app_context():
+        # db.create_all()
         c1 = Category(name='Tablet')
         c2 = Category(name='Mobile')
         c3 = Category(name='Laptop')
@@ -38,4 +54,4 @@ if __name__ == '__main__':
         db.session.add_all([c1, c2, c3])
         db.session.add_all([p1, p2, p3, p4, p5])
         db.session.commit()
-        # db.create_all()
+
