@@ -1,4 +1,6 @@
-from flask import render_template, request
+from flask import render_template, request, redirect
+from flask_login import login_user
+
 import dao
 from app import app, login
 
@@ -25,8 +27,16 @@ def details(id):
 
 @app.route('/admin/login', methods=['post'])
 def login_admin_process():
-    request.form.get('username')
-    request.form.get('password')
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+    user = dao.auth_user(username=username, password=password)
+
+    if user:
+        login_user(user=user)
+
+    return redirect('/admin')
 
 
 if __name__ == '__main__':

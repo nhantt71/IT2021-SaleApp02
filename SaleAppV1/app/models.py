@@ -1,8 +1,14 @@
 from sqlalchemy.orm import relationship
 from app import db
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Enum
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+import enum
+
+
+class UserRoleEnums(enum.Enum):
+    USER = 1
+    ADMIN = 2
 
 
 class User(db.Model, UserMixin):
@@ -10,7 +16,9 @@ class User(db.Model, UserMixin):
     name = Column(String(50), nullable=False)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
-    avatar = Column(String(100), default="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+    avatar = Column(String(100),
+                    default="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+    user_role = Column(Enum(UserRoleEnums), default=UserRoleEnums.USER)
 
     def __str__(self):
         return self.name
@@ -32,12 +40,21 @@ class Product(db.Model):
     image = Column(String(100))
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
 
+    def __str__(self):
+        return self.name
+
 
 if __name__ == '__main__':
     from app import app
 
     with app.app_context():
         # db.create_all()
+        import hashlib
+        u1 = User(name='Admin',
+                  username='admin',
+                  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                  user_role=UserRoleEnums.ADMIN)
+        db.session.add(u1)
         c1 = Category(name='Tablet')
         c2 = Category(name='Mobile')
         c3 = Category(name='Laptop')
@@ -54,4 +71,3 @@ if __name__ == '__main__':
         db.session.add_all([c1, c2, c3])
         db.session.add_all([p1, p2, p3, p4, p5])
         db.session.commit()
-
