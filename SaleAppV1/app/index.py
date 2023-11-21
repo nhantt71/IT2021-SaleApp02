@@ -1,7 +1,8 @@
 import math
 
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session, jsonify
 import dao
+import utils
 from app import app, login
 from flask_login import login_user
 
@@ -19,7 +20,7 @@ def index():
 
     return render_template('index.html', categories=cates,
                            products=products,
-                           pages=math.ceil(total/app.config['PAGE_SIZE']))
+                           pages=math.ceil(total / app.config['PAGE_SIZE']))
 
 
 @app.route('/products/<id>')
@@ -39,6 +40,52 @@ def login_admin_process():
     return redirect('/admin')
 
 
+@app.route('/api/cart', methods=['post'])
+def add_cart():
+    """
+        {
+            'cart': {
+                '1': {
+                    'id': 1,
+                    'name': 'ABC',
+                    'price': 12,
+                    'quantity': 2
+                }, '2': {
+                    'id': 2,
+                    'name': 'ABC',
+                    'price': 12,
+                    'quantity': 2
+                }
+            }
+        }
+        :return:
+    """
+    cart = session.get('cart')
+    if cart is None:
+        cart = {}
+
+    data = request.json
+    id = str(data.get('id'))
+
+    if id in cart:
+        cart[id]['quantity'] = cart[id]['quantity'] + 1
+    else:
+        cart[id] = {
+            'id': id,
+            'name': data.get('name'),
+            'price': data.get('price'),
+            'quantity': 2
+        }
+
+    session['cart'] = cart
+
+    return jsonify(utils.count_cart(cart))
+
+
+@app.route('/cart')
+def cart_list():
+    return render_template('cart.html')
+
 @login.user_loader
 def load_user(user_id):
     return dao.get_user_by_id(user_id)
@@ -46,4 +93,5 @@ def load_user(user_id):
 
 if __name__ == '__main__':
     from app import admin
+
     app.run(debug=True)
