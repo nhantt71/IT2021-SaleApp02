@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 from app import db
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, Enum
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Enum, DateTime, Boolean
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 import enum
@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     avatar = Column(String(100),
                     default="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
     user_role = Column(Enum(UserRoleEnums), default=UserRoleEnums.USER)
+    receipts = relationship('Receipt', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
@@ -39,16 +40,37 @@ class Product(db.Model):
     price = Column(Float, default=0)
     image = Column(String(100))
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
+    receipt_details = relationship('ReceiptDetails', backref='product', lazy=True)
 
     def __str__(self):
         return self.name
+
+
+class BaseModel(db.Model):
+    __abstract__ = True
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_date = Column(DateTime)
+    active = Column(Boolean, default=True)
+
+
+class Receipt(BaseModel):
+    user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    receipt_details = relationship('ReceiptDetails', backref='receipt', lazy=True)
+
+
+class ReceiptDetails(BaseModel):
+    quantity = Column(Integer, default=0)
+    price = Column(Float, default=0)
+    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+    product_id = Column(Integer, ForeignKey(Product.id), nullable=False)
 
 
 if __name__ == '__main__':
     from app import app
 
     with app.app_context():
-        # db.create_all()
+        db.create_all()
         # import hashlib
         # u1 = User(name='Admin',
         #           username='admin',
@@ -73,17 +95,17 @@ if __name__ == '__main__':
         #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
         # p5 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
         #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-        p6 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
-                     image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-        p7 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
-                     image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-        p8 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
-                     image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-        p9 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
-                     image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
-        p10 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
-                     image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+        # p6 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
+        #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+        # p7 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
+        #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+        # p8 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
+        #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+        # p9 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
+        #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
+        # p10 = Product(name='Acer Nitro 5', price=21000000, category_id=3,
+        #              image="https://res.cloudinary.com/dxxwcby8l/image/upload/v1646729533/zuur9gzztcekmyfenkfr.jpg")
         # db.session.add_all([c1, c2, c3])
         # db.session.add_all([p1, p2, p3, p4, p5])
-        db.session.add_all([p6, p7, p8, p9, p10])
+        # db.session.add_all([p6, p7, p8, p9, p10])
         db.session.commit()
