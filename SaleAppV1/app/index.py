@@ -28,6 +28,11 @@ def details(id):
     return render_template('details.html')
 
 
+@app.route('/login')
+def login_user_process():
+    return render_template('login.html')
+
+
 @app.route('/admin/login', methods=['post'])
 def login_admin_process():
     username = request.form.get('username')
