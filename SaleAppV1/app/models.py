@@ -76,7 +76,7 @@ if __name__ == '__main__':
         #           username='admin',
         #           password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
         #           user_role=UserRoleEnums.ADMIN)
-        #
+
         # db.session.add(u1)
         # c1 = Category(name='Tablet')
         # c2 = Category(name='Mobile')

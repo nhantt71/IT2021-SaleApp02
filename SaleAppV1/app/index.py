@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, session, jsonify
 import dao
 import utils
 from app import app, login
-from flask_login import login_user
+from flask_login import login_user, logout_user
 
 
 @app.route('/')
@@ -28,8 +28,19 @@ def details(id):
     return render_template('details.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['get', 'post'])
 def login_user_process():
+    if request.method.__eq__('POST'):
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = dao.auth_user(username=username, password=password)
+        if user:
+            login_user(user=user)
+
+        next = request.args.get('next')
+        return redirect('/' if next is None else next)
+
     return render_template('login.html')
 
 
@@ -43,6 +54,36 @@ def login_admin_process():
         login_user(user=user)
 
     return redirect('/admin')
+
+
+@app.route('/logout')
+def process_logout_user():
+    logout_user()
+    return redirect('/login')
+
+
+@app.route('/register', methods=['get', 'post'])
+def register_user():
+    err_msg = ''
+    if request.method.__eq__('POST'):
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+
+        if password.__eq__(confirm):
+            # request.files['avatar']
+            try:
+                dao.add_user(name=request.form.get('name'),
+                             username=request.form.get('username'),
+                             password=password,
+                             avatar=request.files.get('avatar'))
+            except:
+                err_msg = 'Hệ thống đang bị lỗi!'
+            else:
+                return redirect('/login')
+        else:
+            err_msg = 'Mật khẩu KHÔNG khớp!'
+
+    return render_template('register.html', err_msg=err_msg)
 
 
 @app.route('/api/cart', methods=['post'])

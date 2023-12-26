@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import quote
 from flask_login import LoginManager
+import cloudinary
 
 
 app = Flask(__name__)
@@ -13,6 +14,13 @@ app.config['PAGE_SIZE'] = 6
 
 db = SQLAlchemy(app)
 login = LoginManager(app=app)
+
+
+cloudinary.config(
+    cloud_name='dsp3ymism',
+    api_key='743313142469438',
+    api_secret='wpyGYniqdIjJEzGntOe8WHbh6tg'
+)
 
 
 
