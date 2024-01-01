@@ -1,12 +1,18 @@
-from flask_admin import Admin, BaseView, expose
-from app import db, app
+from flask_admin import Admin, BaseView, expose, AdminIndexView
+from app import db, app, dao
 from flask_admin.contrib.sqla import ModelView
 from app.models import Category, Product, UserRoleEnums
 from flask_login import logout_user, current_user
 from flask import redirect
 
 
-admin = Admin(app, name="QUẢN LÝ BÁN HÀNG", template_mode="bootstrap4")
+class MyAdminIndex(AdminIndexView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/index.html', stats=dao.count_products_by_cate())
+
+
+admin = Admin(app=app, name="QUẢN LÝ BÁN HÀNG", template_mode="bootstrap4", index_view=MyAdminIndex())
 
 
 class AuthenticatedUser(BaseView):
