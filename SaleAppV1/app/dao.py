@@ -71,6 +71,27 @@ def count_products_by_cate():
     return db.session.query(Category.id, Category.name, func.count(Product.id)).join(Product, Product.category_id == Category.id, isouter=True).group_by(Category.id).all()
 
 
+def revenue_stats(kw=None):
+    query = db.session.query(Product.id, Product.name, func.sum(ReceiptDetails.price*ReceiptDetails.quantity))\
+                            .join(ReceiptDetails, ReceiptDetails.product_id == Product.id).group_by(Product.id).all()
+
+    if kw:
+        query = query.filter(Product.name.contains(kw))
+
+    return query
+
+
+def revenue_stats_by_month(year=None):
+    query = db.session.query(func.extract('month', Receipt.created_date),
+                            func.sum(ReceiptDetails.price*ReceiptDetails.quantity))\
+                            .join(ReceiptDetails, ReceiptDetails.receipt_id == Receipt.id)\
+                            .group_by(func.extract('month', Receipt.created_date)).all()
+
+    if year:
+        query = query.filter(func.extract('year', Receipt.created_date) == year)
+
+    return query
+
 if __name__ == '__main__':
     with app.app_context():
         print(count_products_by_cate())

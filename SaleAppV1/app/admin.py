@@ -43,8 +43,11 @@ class MyCategoryView(AuthenticatedAdmin):
 
 class MyStatsView(AuthenticatedUser):
     @expose('/')
-    def __index__(self):
-        return self.render('admin/stats.html')
+    def __index__(self, request):
+        kw = request.args.get('kw')
+        year = request.args.get('year')
+        return self.render('admin/stats.html', stats=dao.revenue_stats(kw),
+                                                month_stats=dao.revenue_stats_by_month(year))
 
 
 class MyLogoutView(AuthenticatedUser):

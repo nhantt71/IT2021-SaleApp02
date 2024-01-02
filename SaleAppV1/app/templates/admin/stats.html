@@ -1,5 +1,124 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
-    <h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+<h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+
+<div class="row">
+    <div class="col-md-5">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Tên</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for c in stats %}
+            <tr>
+                <td>{{c[0]}}</td>
+                <td>{{c[1]}}</td>
+                <td>{{c[2]}} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7">
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            let data = [];
+            let label = [];
+
+            {% for c in stats %}
+            data.push({{c[2]}})
+            label.push('{{c[1]}}')
+            {% endfor %}
+
+            window.onload = function() {
+                const ctx = document.getElementById('myChart');
+
+                new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: label,
+                    datasets: [{
+                      label: '# Doanh Thu',
+                      data: data,
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+            }
+
+        </script>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <table class="table">
+            <tr>
+                <th>Tháng</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for c in stats %}
+            <tr>
+                <td>{{c[0]}}</td>
+                <td>{{c[1]}} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7">
+        <div>
+            <canvas id="myChart2"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            let mData = [];
+            let mLabel = [];
+
+            {% for c in month_stats %}
+            mData.push({{c[1]}})
+            mLabel.push({{c[0]}})
+            {% endfor %}
+
+            window.onload = function() {
+                const ctx2 = document.getElementById('myChart2');
+
+                new Chart(ctx2, {
+                  type: 'bar',
+                  data: {
+                    labels: mLabel,
+                    datasets: [{
+                      label: '# Doanh Thu',
+                      data: mData,
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+            }
+
+        </script>
+    </div>
+</div>
+
 {% endblock %}
